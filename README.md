@@ -7,7 +7,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3B82F6?style=for-the-badge)](src/domain.ts)
 [![MCP](https://img.shields.io/badge/MCP-2_tools-8B5CF6?style=for-the-badge)](#tools)
 [![TypeSafe Jev](https://img.shields.io/badge/powered_by-TypeSafe_Jev-14B8A6?style=for-the-badge)](#credits)
-[![Owner only](https://img.shields.io/badge/access-owner_only-64748B?style=for-the-badge)](docs/architecture.md#the-authentication-boundary)
+[![Owner-only runtime](https://img.shields.io/badge/runtime-owner_only-64748B?style=for-the-badge)](docs/architecture.md#the-authentication-boundary)
 
 <br>
 
@@ -58,7 +58,7 @@ The overall response has `needs_review: true` and `verification_status: "not_fac
 
 ## Try it offline
 
-Requires Node **22.13+**; this export was checked on **24.22.1**. Access to this private repository is required to clone it.
+Requires Node **22.13+**; this export was checked on **24.22.1**. The source repository is public; the hosted evaluation service remains owner-restricted.
 
 ```bash
 git clone https://github.com/swami8791/private-jev.git
@@ -134,7 +134,7 @@ Review thresholds are provisional, not validated risk policies. No independent s
 - **Nehal Swami:** project direction and the Private Jev integration concept.
 - **OpenAI ChatGPT/Codex:** AI assistance with implementation and documentation; not a claim of entirely manual authorship.
 - **TypeSafe:** underlying Jev model and API; no model authorship or training is claimed by this project.
-- **Upstream tooling:** Sites/Vinext, Cloudflare, React, shadcn, and other dependencies. Existing vendored license notices are retained; no blanket open-source license is added by this private export.
+- **Upstream tooling:** Sites/Vinext, Cloudflare, React, shadcn, and other dependencies. Existing vendored license notices are retained; no blanket open-source license is added by this source export.
 
 ---
 

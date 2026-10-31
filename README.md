@@ -11,7 +11,7 @@
 
 <br>
 
-[See an example](#a-judgment-you-can-read) · [Try it offline](#try-it-offline) · [Architecture](docs/architecture.md) · [Security](SECURITY.md) · [Evidence](#what-is-verified)
+[Screenshots](#screenshots) · [See an example](#a-judgment-you-can-read) · [Try it offline](#try-it-offline) · [Architecture](docs/architecture.md) · [Security](SECURITY.md) · [Evidence](#what-is-verified)
 
 </div>
 
@@ -20,6 +20,22 @@
 <img src="assets/workflow.svg" alt="Supplied text passes owner authorization and validation, then TypeSafe Jev returns a structured judgment with uncertainty for human review." width="100%">
 
 ---
+
+## Screenshots
+
+### Actual interface · local preview
+
+![Private Jev informational interface rendered locally](assets/screenshots/local-interface.jpg)
+
+Captured from the unchanged `app/page.tsx` on October 31, 2026. This is the actual informational landing page—not an evaluation dashboard. Its setup/status text is static copy; it is **not a live check of the hosted service**. No credentials or owner identity were loaded.
+
+### Offline fixture · synthetic result report
+
+![Clearly labeled synthetic offline fixture report showing score, confidence and review flags](assets/screenshots/offline-fixture-report.jpg)
+
+A browser screenshot of a documentation report generated from actual offline `createJev(...).evaluate(input())` output using `tests/fixtures.mjs`. **This report is not the product UI or a live Jev response.** It shows the existing mock example's results without inventing a production dashboard. [Reproduce the underlying result](docs/examples.md#replay-it-without-a-key).
+
+Both captures exclude browser/account chrome and contain no real customer data, keys, or owner identifiers. The existing hosted Site was not modified.
 
 ## Why this exists
 

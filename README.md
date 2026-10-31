@@ -2,20 +2,16 @@
 
 # Private Jev
 
-**Structured judgments. Explicit uncertainty. You stay in control.**
+**Turn a vague AI opinion into a structured judgment you can inspect.**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3B82F6?style=for-the-badge)](src/domain.ts)
 [![MCP](https://img.shields.io/badge/MCP-2_tools-8B5CF6?style=for-the-badge)](#tools)
-[![TypeSafe Jev](https://img.shields.io/badge/TypeSafe-Jev-14B8A6?style=for-the-badge)](#attribution)
-[![Owner only](https://img.shields.io/badge/access-owner_only-64748B?style=for-the-badge)](#security)
-
-[![Offline tests](https://img.shields.io/badge/offline_tests-100_passed-success?style=flat-square)](#verification)
-[![Retries](https://img.shields.io/badge/automatic_retries-0-success?style=flat-square)](#security)
-[![Fact checking](https://img.shields.io/badge/fact_checking-not_claimed-amber?style=flat-square)](#limitations)
+[![TypeSafe Jev](https://img.shields.io/badge/powered_by-TypeSafe_Jev-14B8A6?style=for-the-badge)](#credits)
+[![Owner only](https://img.shields.io/badge/access-owner_only-64748B?style=for-the-badge)](docs/architecture.md#the-authentication-boundary)
 
 <br>
 
-[Quick start](#quick-start) · [Tools](#tools) · [How it works](#how-it-works) · [Security](#security) · [Attribution](#attribution)
+[See an example](#a-judgment-you-can-read) · [Try it offline](#try-it-offline) · [Architecture](docs/architecture.md) · [Security](SECURITY.md) · [Evidence](#what-is-verified)
 
 </div>
 
@@ -25,19 +21,44 @@
 
 ---
 
-## What it does
+## Why this exists
 
-Private Jev is Nehal Swami's owner-private integration around **TypeSafe's Jev model**. It exposes a small MCP interface for scoring and classification, with native confidence kept separate from the answer. It is an integration project—not a newly trained model.
+“Is this relevant?” is easy to ask a chatbot. It is harder to turn the answer into something another system can use **without silently treating the model's confidence as truth**.
 
-- **Score** text against an explicit rubric; preserve the raw score and normalize it to 0–100.
-- **Classify** into supplied categories, including an explicit `uncertain` option.
-- **Estimate yes/no probability** with `noul`; do not invent a confidence field.
-- **Flag review** without triggering downstream actions.
-- **Fail closed** when owner authorization, configuration, input, or provider output is invalid.
+Private Jev lets an assistant submit text with explicit questions and receive typed scores, categories, or yes/no probabilities. It keeps the rubric, uncertainty, and review flag visible. It does not decide what happens next.
 
-## Quick start
+**The project is the integration, not the model.** Nehal Swami directed this owner-private application, with AI-assisted implementation. TypeSafe provides Jev. The engineering here is the boundary around the model: authorization, validation, transport controls, normalized results, and honest failure behavior.
 
-Node **22.13+** is required. Offline core tests need no API key and make no live requests:
+### A useful fit—and a deliberate boundary
+
+| Use it to assist with | Do not mistake it for |
+| --- | --- |
+| Rank article or product ideas against your rubric | A browser or independent fact checker |
+| Categorize a supplied support message | An automatic refund, escalation, or ticket action |
+| Score a lead against supplied qualification criteria | Verified facts about the person or company |
+| Surface uncertainty for a reviewer | Calibrated accuracy or permission to act |
+
+## A judgment you can read
+
+Take a **synthetic** support ticket about a duplicate charge. Ask for impact, category, and whether it explicitly requests a refund.
+
+The existing offline test fixture produces this **mock result—not a live model answer**:
+
+| Question | Result | Uncertainty | Review? |
+| --- | --- | --- | --- |
+| Impact | **75/100**; raw **1.5** on a 0–2 rubric | Provider fixture confidence **0.69** | Yes |
+| Category | **billing** | Provider fixture confidence **0.90** | No |
+| Refund requested? | Yes probability **0.50** | `confidence: null` by design | Yes |
+
+The overall response has `needs_review: true` and `verification_status: "not_fact_checked"`.
+
+**75/100 is the rubric score, not a 75% probability that the answer is correct.** A high category confidence also does not override the other questions' review flags. These values demonstrate response handling, not model quality.
+
+→ **[Complete request, generated mock response, and a copy-paste offline replay](docs/examples.md)**
+
+## Try it offline
+
+Requires Node **22.13+**; this export was checked on **24.22.1**. Access to this private repository is required to clone it.
 
 ```bash
 git clone https://github.com/swami8791/private-jev.git
@@ -45,7 +66,9 @@ cd private-jev
 npm test
 ```
 
-For full application development:
+Expected: **100 passing offline tests**. This command needs no dependency installation, account, or API key after cloning; provider calls are injected mocks. The [offline replay](docs/examples.md#replay-it-without-a-key) then shows a complete result using the real service code.
+
+### Full application development
 
 ```bash
 npm ci
@@ -54,104 +77,64 @@ npm run build
 npm run test:worker
 ```
 
-`test:worker` requires the build output and local loopback sockets. The application retains its Sites/Vinext starter and Cloudflare Worker integration. Framework builds may require the supported Sites development environment; this is not a generic standalone MCP hosting recipe.
+These are the repository's full-development commands, not a claim that a fresh framework build was rerun for this documentation update. Worker tests need build output and local loopback sockets. Sites/Vinext tooling and the appropriate hosting environment are required for application deployment.
 
-### Runtime configuration
+### Connecting a live instance is a separate step
 
-[`.env.example`](.env.example) documents names only. Configure actual values in the hosting platform's native runtime/secret settings—never in Git, chat, the client bundle, or README:
+[`.env.example`](.env.example) documents `TYPESAFE_API_KEY` and `JEV_OWNER_SITE_USER_ID` with empty values. Actual values belong in native server-side runtime/secret settings, never Git or a client bundle. Live evaluation can consume TypeSafe credits.
 
-| Name | Purpose |
-| --- | --- |
-| `TYPESAFE_API_KEY` | Server-only TypeSafe API secret |
-| `JEV_OWNER_SITE_USER_ID` | Exact trusted Site-scoped owner identity |
-
-The original private Site project identifier was intentionally removed from this export's `.openai/hosting.json`. Restore the correct authorized project association through the supported Sites workflow before any deployment. This repository does **not** automatically deploy or change the existing Site.
-
-**Do not expose the Worker directly on an untrusted public origin.** Only the trusted Sites gateway may supply `oai-authenticated-user-id`; a locally supplied header is not proof of identity.
+The export intentionally omits the original private Site project ID. It has no automatic deployment wiring. Review the [authentication and hosting prerequisites](docs/architecture.md#the-authentication-boundary) before associating it with any Site. **Do not expose the Worker directly and trust user-supplied identity headers.**
 
 ## Tools
 
-| Tool | Behavior |
+| Tool | Contract |
 | --- | --- |
-| `jev_status({})` | Reports configuration presence and the caller's own Site-scoped identity. Does not contact TypeSafe. |
-| `jev_evaluate({ state, questions, sources? })` | Owner-only evaluation of supplied text. Makes one provider request; live use can consume TypeSafe credits. |
+| `jev_status({})` | Configuration presence and the caller's own Site-scoped identity. **No TypeSafe request.** |
+| `jev_evaluate({ state, questions, sources? })` | Owner-only model judgment; one fixed provider request after validation. No automatic retries or downstream actions. |
 
-Supported MCP methods: `server/discover`, `tools/list`, and `tools/call`. The adapter declares protocol version `2026-07-28`; it is not a claim of universal client compatibility.
+Question types: `score`, `choice`, and `noul`. The adapter exposes `server/discover`, `tools/list`, and `tools/call`, declaring MCP version `2026-07-28`; compatibility with every client is not claimed.
 
-Example **input shape**, not a recorded result:
+## Engineering decisions that matter
 
-```json
-{
-  "state": "A fictional team makes software for routing customer support tickets.",
-  "questions": {
-    "relevance": {
-      "type": "score",
-      "instructions": "Rate relevance to customer support automation using only the text.",
-      "criteria": ["Not relevant", "Somewhat relevant", "Directly relevant"]
-    },
-    "category": {
-      "type": "choice",
-      "instructions": "Choose the primary topic.",
-      "criteria": {
-        "support": "Customer support automation",
-        "finance": "Financial reporting",
-        "uncertain": "Insufficient information"
-      }
-    }
-  }
-}
-```
+- **Fail closed first.** Missing identity, wrong owner, missing configuration, or invalid input stops evaluation before the provider call.
+- **One destination, one attempt.** Fixed HTTPS endpoint, redirects rejected, no automatic retry, 20-second deadline.
+- **Validate both sides.** Input and output are bounded; malformed responses become explicit sanitized errors rather than partial answers.
+- **Keep signals separate.** Scores, native confidence, provisional review flags, and fact-verification status are different fields.
+- **Do not turn links into evidence.** Optional sources are echoed as unverified metadata; they are not fetched or forwarded to the provider.
 
-## How it works
+→ **[Architecture, trust boundaries, data flow, and tradeoffs](docs/architecture.md)**
 
-1. The trusted gateway provides caller identity.
-2. The service verifies the caller matches the configured owner.
-3. Strict schemas bound input size and reject unknown fields.
-4. One fixed HTTPS request goes to `https://api.typesafe.ai/v1/systemone`, with pinned model `jev-1.14.0`.
-5. The response is bounded and validated before normalization.
-6. The caller receives answers, confidence where supported, review flags, usage, and an explicit `not_fact_checked` label.
+## What is verified
 
-| File | Responsibility |
+| Evidence | What it establishes | What it does not establish |
+| --- | --- | --- |
+| **100 offline tests**, rerun October 31, 2026 | Core validation, authorization, transport handling, and MCP behavior against fixtures | Live provider availability or judgment quality |
+| **Five offline Worker tests**, historical October 25 record | Transport regression coverage in the Worker runtime at the baseline | A fresh full-framework build of this export |
+| **One approved synthetic live evaluation**, historical October 25 record | The deployed assistant → MCP → TypeSafe flow worked at that time | Broad accuracy, calibrated confidence, or suitability for high-stakes decisions |
+
+The example in this README is generated from the **mock fixture**, not the historical live test. No live request was made for this GitHub export or its documentation improvements.
+
+## Read the project
+
+| Start here | Then go deeper |
 | --- | --- |
-| [`src/domain.ts`](src/domain.ts) | Input validation, question types, output validation and normalization |
-| [`src/service.ts`](src/service.ts) | Owner checks, provider request, timeout and sanitized errors |
-| [`src/mcp.ts`](src/mcp.ts) | MCP schemas and protocol adapter |
-| [`worker/index.ts`](worker/index.ts) | Worker routing and server-side environment binding |
-| [`tests/`](tests/) | Offline domain, service, MCP and Worker regression tests |
+| [Examples](docs/examples.md): request → response → interpretation | [`tests/fixtures.mjs`](tests/fixtures.mjs), [`tests/service.test.mjs`](tests/service.test.mjs) |
+| [Architecture](docs/architecture.md): boundaries and design decisions | [`src/domain.ts`](src/domain.ts), [`src/service.ts`](src/service.ts), [`src/mcp.ts`](src/mcp.ts), [`worker/index.ts`](worker/index.ts) |
+| [Security](SECURITY.md): secrets and deployment constraints | [Transport diagnosis](docs/transport-diagnosis.md) |
+| [Source provenance](docs/source-provenance.md): export baseline and hygiene | [Historical verification log](docs/verification.md) |
 
-## Security
+Historical development notes describe intermediate states. Their early “not deployed” statements are not a current deployment-status claim.
 
-- Authorization precedes evaluation; missing identity or configuration fails closed.
-- Fixed provider destination; redirects are returned and rejected, never followed.
-- No automatic retries; a 20-second deadline covers headers and body.
-- Request cap: 32 KiB. Provider response cap: 128 KiB. Up to eight questions.
-- Runtime secrets stay server-side; errors do not echo provider payloads or credentials.
-- Source URLs are unverified metadata: not fetched and not sent upstream.
-- No application payload storage or logging is implemented. Provider data handling is a separate consideration.
+## Limits worth keeping visible
 
-See [`SECURITY.md`](SECURITY.md). Never send sensitive or regulated data without assessing the provider, contracts, and intended use.
+Review thresholds are provisional, not validated risk policies. No independent source verification, autonomous actions, training, or application payload storage is implemented. Provider retention and data handling are separate from the application's behavior. Assess those before supplying sensitive or regulated data. Do not use this integration alone to authorize clinical, legal, financial, or other consequential decisions.
 
-## Verification
+## Credits
 
-- **October 31, 2026:** `npm test` rerun against this sanitized export on Node 24.22.1: **100 passed, 0 failed**, with injected mocks and no provider calls.
-- **October 25, 2026 historical evidence:** 100 core tests plus five offline Worker integration tests, full/core typechecks, lint, and builds were reported passing at the source commit.
-- **October 25 historical live check:** exactly one approved synthetic end-to-end evaluation succeeded after the transport fix. This proves that flow worked then—not broad accuracy, calibrated confidence, or present-day provider availability.
-- Full framework builds and Worker tests were **not rerun for this GitHub export**.
-
-Source baseline: `fe80d3b377c2eeec196aa2adb63dae54ca6df2fa`. Core implementation is unchanged. Documentation, example configuration, and export hygiene are described in [`docs/source-provenance.md`](docs/source-provenance.md). Earlier files under `docs/` are historical development records; their “not deployed” statements describe earlier stages, not current status.
-
-## Limitations
-
-Model judgments are **not independent fact verification**. Confidence is model-reported, not measured accuracy. Review thresholds are provisional. The app does not browse sources, train a model, autonomously act, or establish suitability for clinical, legal, financial, or other high-stakes decisions. There is no automated live-test or deployment workflow in this repository.
-
-## Attribution
-
-- **Nehal Swami:** project direction, integration concept, and Private Jev application ownership.
-- **AI-assisted implementation:** built with assistance from OpenAI ChatGPT/Codex; this is not a claim that every line was manually authored by Nehal.
-- **TypeSafe:** creator/provider of the underlying Jev model and API. Private Jev does not claim authorship or training of that model.
-- **Starter and dependencies:** Sites/Vinext, Cloudflare, React, shadcn and other upstream packages retain their respective rights and license terms. Vendored license notices are preserved.
-
-No blanket open-source license is asserted for this private repository. Review component licenses and ownership before any redistribution.
+- **Nehal Swami:** project direction and the Private Jev integration concept.
+- **OpenAI ChatGPT/Codex:** AI assistance with implementation and documentation; not a claim of entirely manual authorship.
+- **TypeSafe:** underlying Jev model and API; no model authorship or training is claimed by this project.
+- **Upstream tooling:** Sites/Vinext, Cloudflare, React, shadcn, and other dependencies. Existing vendored license notices are retained; no blanket open-source license is added by this private export.
 
 ---
 

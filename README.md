@@ -1,6 +1,6 @@
 <div align="center">
 
-# Private Jev
+# Jev Judge MCP
 
 **Turn a vague AI opinion into a structured judgment you can inspect.**
 
@@ -25,7 +25,7 @@
 
 ### Actual interface · local preview
 
-![Private Jev informational interface rendered locally](assets/screenshots/local-interface.jpg)
+![Jev Judge MCP informational interface rendered locally](assets/screenshots/local-interface.jpg)
 
 Captured from the unchanged `app/page.tsx` on October 31, 2026. This is the actual informational landing page—not an evaluation dashboard. Its setup/status text is static copy; it is **not a live check of the hosted service**. No credentials or owner identity were loaded.
 
@@ -41,7 +41,7 @@ Both captures exclude browser/account chrome and contain no real customer data, 
 
 “Is this relevant?” is easy to ask a chatbot. It is harder to turn the answer into something another system can use **without silently treating the model's confidence as truth**.
 
-Private Jev lets an assistant submit text with explicit questions and receive typed scores, categories, or yes/no probabilities. It keeps the rubric, uncertainty, and review flag visible. It does not decide what happens next.
+Jev Judge MCP lets an assistant submit text with explicit questions and receive typed scores, categories, or yes/no probabilities. It keeps the rubric, uncertainty, and review flag visible. It does not decide what happens next.
 
 **The project is the integration, not the model.** Nehal Swami directed this owner-private application, with AI-assisted implementation. TypeSafe provides Jev. The engineering here is the boundary around the model: authorization, validation, transport controls, normalized results, and honest failure behavior.
 
@@ -77,8 +77,8 @@ The overall response has `needs_review: true` and `verification_status: "not_fac
 Requires Node **22.13+**; this export was checked on **24.22.1**. The source repository is public; the hosted evaluation service remains owner-restricted.
 
 ```bash
-git clone https://github.com/swami8791/private-jev.git
-cd private-jev
+git clone https://github.com/swami8791/jev-judge-mcp.git
+cd jev-judge-mcp
 npm test
 ```
 
@@ -147,7 +147,7 @@ Review thresholds are provisional, not validated risk policies. No independent s
 
 ## Credits
 
-- **Nehal Swami:** project direction and the Private Jev integration concept.
+- **Nehal Swami:** project direction and the Jev Judge MCP integration concept.
 - **OpenAI ChatGPT/Codex:** AI assistance with implementation and documentation; not a claim of entirely manual authorship.
 - **TypeSafe:** underlying Jev model and API; no model authorship or training is claimed by this project.
 - **Upstream tooling:** Sites/Vinext, Cloudflare, React, shadcn, and other dependencies. Existing vendored license notices are retained; no blanket open-source license is added by this source export.

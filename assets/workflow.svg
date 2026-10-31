@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
-<title id="title">Private Jev workflow</title><desc id="desc">Supplied text, owner gate, TypeSafe Jev, structured result. Confidence is not verification.</desc>
+<title id="title">Jev Judge MCP workflow</title><desc id="desc">Supplied text, owner gate, TypeSafe Jev, structured result. Confidence is not verification.</desc>
 <rect width="1200" height="360" rx="24" fill="#0f172a"/>
-<text x="48" y="55" font-family="Arial,sans-serif" font-size="16" letter-spacing="3" fill="#5eead4">PRIVATE JEV / EXPLICIT UNCERTAINTY</text>
+<text x="48" y="55" font-family="Arial,sans-serif" font-size="16" letter-spacing="3" fill="#5eead4">JEV JUDGE MCP / EXPLICIT UNCERTAINTY</text>
 <text x="48" y="94" font-family="Arial,sans-serif" font-weight="700" font-size="28" fill="#f8fafc">One controlled request. A structured judgment.</text>
 <g font-family="Arial,sans-serif">
 <g fill="#18263b" stroke="#334155"><rect x="48" y="135" width="240" height="120" rx="14"/><rect x="336" y="135" width="240" height="120" rx="14"/><rect x="624" y="135" width="240" height="120" rx="14"/><rect x="912" y="135" width="240" height="120" rx="14"/></g>

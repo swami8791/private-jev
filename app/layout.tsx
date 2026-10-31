@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Private Jev",
+  title: "Jev Judge MCP",
   description: "Private model judgments with explicit uncertainty.",
   icons: {
     icon: "/favicon.svg",

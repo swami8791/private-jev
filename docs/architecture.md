@@ -2,7 +2,7 @@
 
 [← Project overview](../README.md) · [Runnable example](examples.md) · [Security](../SECURITY.md)
 
-Private Jev wraps a third-party model with a small, owner-restricted interface. It is not a model-training system and does not independently establish whether supplied text is true.
+Jev Judge MCP wraps a third-party model with a small, owner-restricted interface. It is not a model-training system and does not independently establish whether supplied text is true.
 
 ## The system at a glance
 
@@ -27,7 +27,7 @@ The final review process is **outside this application**. The integration return
 
 | Layer | Responsibility |
 | --- | --- |
-| Private Jev integration, directed by Nehal Swami with AI assistance | MCP adapter, owner checks, input/output contracts, bounded transport, normalization, review flags |
+| Jev Judge MCP integration, directed by Nehal Swami with AI assistance | MCP adapter, owner checks, input/output contracts, bounded transport, normalization, review flags |
 | TypeSafe Jev | Model inference and native model-reported values |
 | Sites gateway / hosting platform | Trusted identity context, access enforcement at the hosting boundary, runtime secret injection |
 | User and any downstream system | Decide which data may be sent and how results should be reviewed or used |

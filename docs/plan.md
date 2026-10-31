@@ -1,4 +1,4 @@
-# Private Jev implementation plan
+# Jev Judge MCP implementation plan
 
 Spec: docs/design.md. Global constraints: isolated local project; all provider traffic mocked;
 no credentials, remote creation, deployment, installation of plugins, or live calls.

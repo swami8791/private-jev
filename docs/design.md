@@ -1,4 +1,4 @@
-# Private Jev — approved local implementation
+# Jev Judge MCP — approved local implementation
 
 Two tools: jev_status({}) and jev_evaluate({state, questions, sources?}). No persistence,
 telemetry, source fetching, automatic actions, retries or fallback keys/models.

@@ -3,7 +3,7 @@ import { DISCLAIMER, MODEL } from '../src/domain';
 export default function Home() {
   return (
     <main className="mx-auto max-w-2xl px-8 py-20">
-      <p className="text-sm text-stone-500">PRIVATE JEV</p>
+      <p className="text-sm text-stone-500">JEV JUDGE MCP</p>
       <h1 className="mt-4 text-3xl font-semibold">Judgment with uncertainty in view.</h1>
       <p className="mt-6 text-lg">{DISCLAIMER}</p>
       <section className="mt-10 rounded-xl border border-stone-200 p-6">
